@@ -136,6 +136,20 @@ def test_default_output_directory_carries_the_compactor_version(runner):
     assert f"hepml-compactor {__version__}" in result.stderr
 
 
+def test_signals_without_a_coupling_share_one_folder(runner):
+    from hepml_compact import __version__
+
+    run, _ = runner
+    config = configuration("missing signal.root", ["missing background.root"])
+    del config["samples"]["sig_m200_rho01"]["rho_tc"]
+    result = run(config, "all", ["--dry-run"], outdir=False)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f"exports/cg_bbc-v{__version__}/signals" in result.stdout and "/rho" not in result.stdout
+    config["samples"]["sig_m200_rho01"]["rho_tc"] = -0.1
+    result = run(config, "all", ["--dry-run"], outdir=False)
+    assert result.returncode != 0 and "invalid signal rho_tc" in result.stderr
+
+
 def test_environment_mismatch_stops_a_batch_unless_allowed(runner, root_factory):
     run, output = runner
     (run.directory / "constraints-py311.txt").write_text("# python: 2.7\nnumpy==0.0.1\n")

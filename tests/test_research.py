@@ -16,6 +16,7 @@ from hepml.adapters.research import (
     read_settings,
     verify_stage,
 )
+from hepml.adapters.study_loader import load_study
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -47,7 +48,7 @@ def test_inventory_and_bounded_preview(research_settings):
     assert inventory.selected_yield.tolist() == pytest.approx([4800, 48000])
     preview = feature_preview(config, records)
     assert preview.groupby("sample").size().tolist() == [35, 35]
-    assert {"mcb1", "mcb2"}.issubset(preview.columns)
+    assert set(load_study(Path(config["study"])).plugin.FEATURES).issubset(preview.columns)
     assert preview.sample_weight.unique().tolist() == pytest.approx([3.0, 30.0])
     pd.testing.assert_frame_equal(preview, feature_preview(config, records))
     shard = next(Path(config["background_dir"]).glob("*.parquet"))

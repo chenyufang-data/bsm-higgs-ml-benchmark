@@ -128,16 +128,17 @@ See [docs/EVALUATION.md](docs/EVALUATION.md). In short:
   with import boundaries enforced by a test.
 - **Reproducible reports**: every study freezes its settings, archives its source code and hashes its
   inputs and outputs; notebooks only display saved artifacts.
-- **Tests**: about 240 tests, including end-to-end runs of the whole pipeline on synthetic data;
-  continuous integration on Linux with Python 3.11.
+- **Tests**: about 240 tests. They include end-to-end runs on synthetic data: extraction, training,
+  inference and the tagging closure. Continuous integration runs them on Linux with Python 3.11.
 
 ## Repository layout
 
 ```text
 compactor/          standalone extraction package (simulation files -> Parquet)
 src/hepml/          pipeline: domain, application, adapters, commands
-studies/cg_bbc/     configuration of the example analysis (features, selections, study designs)
+studies/cg_bbc/     simplified example configuration of the analysis (features, selections, study designs)
 notebooks/          report templates; they read saved artifacts only
+scripts/            packaging of the extraction for the server that stores the simulation files
 benchmark/          the benchmark figures and tables shown above
 tests/              unit and end-to-end tests on synthetic data
 docs/               architecture and evaluation notes

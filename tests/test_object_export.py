@@ -39,7 +39,8 @@ def recipe(tmp_path, update, base=None):
 
 def test_selection_boundaries_roles_and_analytic_observables(jets_recipe):
     # First event has two b jets tied in pT, a back-to-back c, and an extra
-    # untagged jet. The additional jet must be kept, but excluded from BDT HT.
+    # untagged jet. The additional jet must be kept, but excluded from HT.
+    # The study's other observables are checked in test_cg_bbc_features.py.
     rows = [
         ([50.0, 50.0, 40.0, 15.0], [0.0, 0.0, 0.0, 3.0], [1, 1, 16, 0]),
         ([50.0, 50.0, 25.0], [0.0, 0.0, 0.0], [1, 1, 16]),  # strict pT cut
@@ -67,11 +68,6 @@ def test_selection_boundaries_roles_and_analytic_observables(jets_recipe):
     frame = load_study().plugin.derive_features(selected.frame)
     np.testing.assert_array_equal(frame["ht"], [140.0, 150.0])
     np.testing.assert_allclose(frame.loc[0, ["mcb1", "mcb2"]].to_numpy(dtype=float), np.sqrt(8000), rtol=1e-6)
-    np.testing.assert_allclose(frame.loc[0, ["mbb", "mcbb"]].to_numpy(dtype=float), [0.0, np.sqrt(16000)], atol=1e-5)
-    np.testing.assert_allclose(
-        frame.loc[0, ["dr12", "dr13", "dr23"]].to_numpy(dtype=float), [0.0, np.pi, np.pi], atol=1e-6
-    )
-    assert frame.loc[0, "ratio_ptcb"] == np.float32(0.8)
 
 
 def test_ragged_batch_padding_four_vectors_and_lorentz_mass():

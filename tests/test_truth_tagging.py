@@ -12,6 +12,7 @@ import pytest
 from hepml_compact.config import load_profile
 from hepml_compact.parquet_writer import sha256_file
 
+from hepml.adapters.study_loader import load_study
 from hepml.cli import main
 from hepml.commands.truth_tag_closure import ShapeAccumulator, TagRateAccumulator
 from hepml.domain.splits import extend_registry, extend_sample_membership
@@ -184,8 +185,10 @@ def test_membership_extension_keeps_every_frozen_assignment():
 @pytest.mark.slow
 def test_closure_command_on_synthetic_exports(tmp_path, monkeypatch):
     monkeypatch.setenv("MPLBACKEND", "Agg")
+    # The b-rich background is the design's primary shape sample.
+    primary = SETTINGS["closure"]["shapes"]["primary_sample"]
     truth_root, direct_root, registry = build_world(tmp_path / "world", [
-        ("backgrounds", "bkg_bbc", "background", [5, 5, 4, 21], 6000, None, None, 1.0, 1.0),
+        ("backgrounds", primary, "background", [5, 5, 4, 21], 6000, None, None, 1.0, 1.0),
         ("backgrounds", "bkg_ccj", "background", [5, 4, 21, 1], 12000, None, None, 1.0, 1.0),
         ("rho04", "sig_m300_rho04", "signal", [5, 5, 4, 2], 3000, 300, 0.4, 1.0, 1.0)])
 
@@ -202,9 +205,10 @@ def test_closure_command_on_synthetic_exports(tmp_path, monkeypatch):
     consistency = pd.read_csv(report / "tables/consistency.csv")
     assert consistency.passed.all() and (consistency.reproduced > 0).all()
     yields = pd.read_csv(report / "tables/yields.csv")
-    assert set(yields["sample"]) == {"bkg_bbc", "bkg_ccj", "sig_m300_rho04"} and (yields.gain > 1).all()
+    assert set(yields["sample"]) == {primary, "bkg_ccj", "sig_m300_rho04"} and (yields.gain > 1).all()
     shapes = pd.read_csv(report / "tables/shapes.csv")
-    assert len(shapes[shapes.gated]) == 15 and shapes[shapes.gated].passed.all()
+    # One gated shape per model input of the primary sample.
+    assert len(shapes[shapes.gated]) == len(load_study(STUDY).plugin.FEATURES) and shapes[shapes.gated].passed.all()
     assignments = pd.read_parquet(extended / "assignments.parquet")
     frozen = pd.read_parquet(registry / "assignments.parquet").merge(assignments, on="event_id", suffixes=("", "_new"))
     assert (frozen.split == frozen.split_new).all()

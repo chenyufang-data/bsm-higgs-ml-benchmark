@@ -15,7 +15,8 @@ Usage: bash run_extraction.sh [all|signals|backgrounds] [options]
   --help              Show this help
 
 Samples run sequentially; first failure stops the batch with a nonzero exit code.
-Signals go to <outdir>/rho01 ... rho05; backgrounds go once to <outdir>/backgrounds.
+Signals go to <outdir>/rho01 ... rho05 by rho_tc, or to <outdir>/signals without one;
+backgrounds go once to <outdir>/backgrounds.
 Logs and a status TSV go to <outdir>/logs/<timestamp>_<mode>_<PID>/.
 Rerun the same command to resume; existing exports are checked by the compactor.
 New compactor code or libraries cannot resume or revalidate an older export: use a
@@ -112,10 +113,16 @@ for key, sample in samples.items():
         folder = "backgrounds"
     else:
         mass = sample.get("mass")
-        rho = Decimal(str(sample.get("rho_tc")))
-        if not isinstance(mass, (int, float)) or not math.isfinite(mass) or mass <= 0 or not rho.is_finite() or rho < 0:
-            raise ValueError(f"{key}: invalid signal mass/rho_tc")
-        folder = f"rho{int(rho * 10):02d}" if rho * 10 == int(rho * 10) else "rho" + format(rho.normalize(), "f").replace(".", "p")
+        if not isinstance(mass, (int, float)) or not math.isfinite(mass) or mass <= 0:
+            raise ValueError(f"{key}: invalid signal mass")
+        if sample.get("rho_tc") is None:
+            # A study with mass as its only signal parameter keeps every signal in one folder.
+            folder = "signals"
+        else:
+            rho = Decimal(str(sample.get("rho_tc")))
+            if not rho.is_finite() or rho < 0:
+                raise ValueError(f"{key}: invalid signal rho_tc")
+            folder = f"rho{int(rho * 10):02d}" if rho * 10 == int(rho * 10) else "rho" + format(rho.normalize(), "f").replace(".", "p")
     jobs.append((key, (out / folder).as_posix()))
 if not jobs:
     raise ValueError(f"No samples selected for mode {mode}")

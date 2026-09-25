@@ -38,7 +38,8 @@ def test_study_selects_known_synthetic_events_and_retains_kinematics(root_sample
     assert len(result.frame) == 1600
     frame = load_study().plugin.derive_features(result.frame)
     assert (frame["ptb1"] >= frame["ptb2"]).all()
-    assert len(load_study().plugin.FEATURES) == 15
+    features = load_study().plugin.FEATURES
+    assert features and len(set(features)) == len(features)
     assert set(load_study().plugin.RETAINED_COLUMNS).issubset(frame)
     assert np.isfinite(frame[load_study().plugin.FEATURES].to_numpy()).all()
 
