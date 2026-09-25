@@ -1,0 +1,211 @@
+schema_version: 2
+name: cg_bbc
+tree: Delphes
+units:
+  momentum: GeV
+  angle: radians
+  cross_section: pb
+collections:
+  jets:
+    fields:
+      pt:
+        branch: Jet/Jet.PT
+        dtype: float32
+      eta:
+        branch: Jet/Jet.Eta
+        dtype: float32
+      phi:
+        branch: Jet/Jet.Phi
+        dtype: float32
+      mass:
+        branch: Jet/Jet.Mass
+        dtype: float32
+      btag:
+        branch: Jet/Jet.BTag
+        dtype: int32
+      deta:
+        branch: Jet/Jet.DeltaEta
+        dtype: float32
+      dphi:
+        branch: Jet/Jet.DeltaPhi
+        dtype: float32
+      ehad_eem:
+        branch: Jet/Jet.EhadOverEem
+        dtype: float32
+      truth_flavor:
+        branch: Jet/Jet.Flavor
+        dtype: int32
+        truth: true
+  towers:
+    owner:
+      collection: jets
+      refs: Jet/Jet.Constituents
+      uid: Tower/Tower.fUniqueID
+    keep: owned
+    fields:
+      et:
+        branch: Tower/Tower.ET
+        dtype: float32
+      eta:
+        branch: Tower/Tower.Eta
+        dtype: float32
+      phi:
+        branch: Tower/Tower.Phi
+        dtype: float32
+      e:
+        branch: Tower/Tower.E
+        dtype: float32
+      eem:
+        branch: Tower/Tower.Eem
+        dtype: float32
+      ehad:
+        branch: Tower/Tower.Ehad
+        dtype: float32
+  eflow_tracks:
+    fields:
+      pt:
+        branch: EFlowTrack/EFlowTrack.PT
+        dtype: float32
+      eta:
+        branch: EFlowTrack/EFlowTrack.Eta
+        dtype: float32
+      phi:
+        branch: EFlowTrack/EFlowTrack.Phi
+        dtype: float32
+      charge:
+        branch: EFlowTrack/EFlowTrack.Charge
+        dtype: int32
+      kind:
+        branch: EFlowTrack/EFlowTrack.PID
+        dtype: int32
+        map_abs:
+          11: 1
+          13: 2
+        map_default: 0
+  eflow_photons:
+    fields:
+      et:
+        branch: EFlowPhoton/EFlowPhoton.ET
+        dtype: float32
+      eta:
+        branch: EFlowPhoton/EFlowPhoton.Eta
+        dtype: float32
+      phi:
+        branch: EFlowPhoton/EFlowPhoton.Phi
+        dtype: float32
+      e:
+        branch: EFlowPhoton/EFlowPhoton.E
+        dtype: float32
+  eflow_neutral_hadrons:
+    fields:
+      et:
+        branch: EFlowNeutralHadron/EFlowNeutralHadron.ET
+        dtype: float32
+      eta:
+        branch: EFlowNeutralHadron/EFlowNeutralHadron.Eta
+        dtype: float32
+      phi:
+        branch: EFlowNeutralHadron/EFlowNeutralHadron.Phi
+        dtype: float32
+      e:
+        branch: EFlowNeutralHadron/EFlowNeutralHadron.E
+        dtype: float32
+  truth_partons:
+    truth: true
+    keep:
+      status:
+        ge: 21
+        le: 23
+    fields:
+      pid:
+        branch: Particle/Particle.PID
+        dtype: int32
+      status:
+        branch: Particle/Particle.Status
+        dtype: int32
+      pt:
+        branch: Particle/Particle.PT
+        dtype: float32
+      eta:
+        branch: Particle/Particle.Eta
+        dtype: float32
+      phi:
+        branch: Particle/Particle.Phi
+        dtype: float32
+      mass:
+        branch: Particle/Particle.Mass
+        dtype: float32
+event_fields:
+  weight:
+    branch: Event/Event.Weight
+    dtype: float32
+    reduce: first
+    required: false
+    default: 1.0
+  xs:
+    branch: Event/Event.CrossSection
+    dtype: float32
+    reduce: first
+    required: false
+    default: 1.0
+  event_number:
+    branch: Event/Event.Number
+    dtype: int64
+    reduce: first
+  met:
+    branch: MissingET/MissingET.MET
+    dtype: float32
+    reduce: first
+  met_phi:
+    branch: MissingET/MissingET.Phi
+    dtype: float32
+    reduce: first
+  ht_all:
+    branch: ScalarHT/ScalarHT.HT
+    dtype: float32
+    reduce: first
+  n_electrons:
+    branch: Electron_size
+    dtype: int32
+  n_muons:
+    branch: Muon_size
+    dtype: int32
+  n_photons:
+    branch: Photon_size
+    dtype: int32
+  truth_lhe_weights:
+    branch: Weight/Weight.Weight
+    dtype: float32
+    reduce: list
+    truth: true
+    accumulate: ratio_to_first
+selection:
+  b_jets:
+    collection: jets
+    filters:
+      pt:
+        gt: 25.0
+      eta:
+        abs_lt: 2.5
+      btag:
+        eq: 1
+    count:
+      exact: 2
+    sort_by: pt
+    roles:
+    - b1
+    - b2
+  c_jets:
+    collection: jets
+    filters:
+      pt:
+        gt: 25.0
+      eta:
+        abs_lt: 2.5
+      btag:
+        eq: 16
+    count:
+      exact: 1
+    sort_by: pt
+    roles:
+    - c1

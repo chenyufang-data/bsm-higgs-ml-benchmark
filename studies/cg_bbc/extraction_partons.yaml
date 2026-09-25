@@ -1,0 +1,52 @@
+schema_version: 2
+name: cg_bbc_partons
+tree: Delphes
+units:
+  momentum: GeV
+  angle: radians
+  cross_section: pb
+collections:
+  jets:
+    fields:
+      pt:
+        branch: Jet/Jet.PT
+        dtype: float32
+      eta:
+        branch: Jet/Jet.Eta
+        dtype: float32
+  truth_partons:
+    truth: true
+    keep:
+      status:
+        ge: 21
+        le: 23
+    fields:
+      pid:
+        branch: Particle/Particle.PID
+        dtype: int32
+      status:
+        branch: Particle/Particle.Status
+        dtype: int32
+event_fields:
+  weight:
+    branch: Event/Event.Weight
+    dtype: float32
+    reduce: first
+    required: false
+    default: 1.0
+  xs:
+    branch: Event/Event.CrossSection
+    dtype: float32
+    reduce: first
+    required: false
+    default: 1.0
+selection:
+  jets_in_acceptance:
+    collection: jets
+    filters:
+      pt:
+        gt: 25.0
+      eta:
+        abs_lt: 2.5
+    count:
+      min: 3

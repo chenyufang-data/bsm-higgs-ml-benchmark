@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bsm-higgs-ml"
+version = "0.3.0"
+description = "Delphes ROOT to XGBoost BDT pipeline: jet selection, physics-weighted training, frozen releases, inference reports"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Chenyu Fang", email = "fchy19960519@gmail.com" }]
+dependencies = [
+    # The compactor in ./compactor, installed from the same checkout. 0.2.1 adds the
+    # merging counts the analysis imports; 0.3 may change the export interface.
+    "hepml-compactor>=0.2.1,<0.3",
+    "numpy",
+    "pandas",
+    "scipy",
+    "pyyaml",
+    "scikit-learn",
+    "xgboost==3.1.2",
+    "joblib",
+    "shap==0.50.0",
+    "pyarrow",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+research = ["jupyterlab>=4,<5", "nbclient>=0.10,<1", "nbconvert>=7,<8", "ipykernel>=6,<8", "psutil>=5.9"]
+# PyTorch for the Phase 10 networks; for an NVIDIA GPU install the CUDA build first, e.g.
+# pip install torch --index-url https://download.pytorch.org/whl/cu128
+# The ParT pilot pins the upstream model: pip install --no-deps weaver-core==0.4.17
+# (its model needs only torch; its other dependencies serve its own training framework).
+networks = ["torch>=2.7"]
+
+[project.urls]
+Repository = "https://github.com/chenyufang-data/bsm-higgs-ml"
+
+[project.scripts]
+hepml = "hepml.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src", "."]
+include = ["hepml*", "studies*"]
+
+[tool.setuptools.package-data]
+"studies.cg_bbc" = ["*.yaml", "*.md"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+# Pinned explicitly so local and CI runs agree regardless of user-level config.
+select = ["E4", "E7", "E9", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Tests import repository utilities from scripts/ as well as installed packages.
+pythonpath = ["."]
+markers = ["slow: long-running end-to-end tests (deselect with -m 'not slow')"]

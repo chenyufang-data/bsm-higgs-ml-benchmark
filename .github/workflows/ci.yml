@@ -1,0 +1,52 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package and test tools
+        run: python -m pip install -e ./compactor -e '.[dev,research]'
+      - name: Lint
+        run: ruff check src tests studies scripts compactor
+      - name: Unit and compact export tests (synthetic inputs)
+        run: pytest -v -m 'not slow'
+      - name: Training, plots, release, inference and report smoke tests
+        run: pytest -v -m slow
+      - name: Build current server bundle
+        run: python scripts/package_server.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-extraction-bundle
+          path: outputs/packages/hepml-server-extract.zip*
+          if-no-files-found: error
+
+  # The CPU server runs the compactor on Python 3.11 with these exact libraries.
+  server-environment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install with the server's pinned extraction libraries
+        run: python -m pip install -c compactor/constraints-py311.txt -e ./compactor -e '.[dev]'
+      - name: Confirm the pins are in effect
+        run: python -m hepml_compact.environment compactor/constraints-py311.txt
+      - name: Compactor, bundle and server-runner tests
+        run: >-
+          pytest -v tests/test_compact.py tests/test_compact_objects.py tests/test_object_export.py
+          tests/test_extraction_runner.py tests/test_sample_manifest.py

@@ -1,0 +1,10 @@
+mass,method,inference_ms_per_1k_events,device,parameters,fit_seconds,fit_device,best_epoch,parameter_note
+200.0,bdt,0.8785418045724456,cpu,,,,,
+200.0,lorentznet,1.8728256295895558,cuda,,,,,
+200.0,particle_transformer,3.538113843691946,cuda,,,,,
+400.0,bdt,0.7924151359900502,cpu,,,,,
+400.0,lorentznet,1.7666968523829163,cuda,,,,,
+400.0,particle_transformer,6.0484317103713385,cuda,,,,,
+,lorentznet,,,225007.0,425.80031383336365,cuda,48.0,
+,particle_transformer,,,2141005.0,352.4191365500058,cuda,25.833333333333332,
+,bdt,,,31217.0,4.393457099911757,cpu,,"1,007 trees, depth 4"

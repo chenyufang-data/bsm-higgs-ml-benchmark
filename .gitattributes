@@ -1,0 +1,7 @@
+# Keep code and server bundles consistent across Windows and Linux.
+* text=auto eol=lf
+*.root binary
+*.png binary
+*.jpg binary
+*.parquet binary
+*.zip binary

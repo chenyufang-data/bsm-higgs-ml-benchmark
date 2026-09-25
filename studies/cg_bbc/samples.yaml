@@ -1,0 +1,17 @@
+data_root: /path/to/root/files
+samples:
+  sig_m200_rho01:
+    kind: signal
+    mass: 200
+    rho_tc: 0.1
+    xs_pb: null
+    xs_file: signal/cross_section.txt
+    files:
+    - signal/events.root
+  bkg_bbc:
+    kind: background
+    xs_pb: null
+    xs_file: background/cross_section.txt
+    files:
+    - background/events_1.root
+    - background/events_2.root

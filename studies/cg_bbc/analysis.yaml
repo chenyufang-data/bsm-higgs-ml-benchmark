@@ -1,0 +1,39 @@
+physics:
+  lumi: 3000.0
+evaluation:
+  schema_version: 2
+  lumi_pb_inv: 500000.0
+  signal_k_factor: 1.95
+  background_k_factor: 1.26
+  background_systematics:
+  - 0.05
+  - 0.1
+  primary_objective: Z_syst_5pct
+  yield_scope: full_expected_per_process
+  threshold_source: validation
+  min_background_neff: 100.0
+  min_process_mc: 1
+  min_signal_mc: 1
+  plateau_fraction: 0.02
+splits:
+  test_size: 0.1
+  val_size: 0.1
+  seed: 42
+training:
+  seed: 42
+  max_depth: 4
+  n_estimators: 1200
+  learning_rate: 0.05
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_lambda: 1.0
+  reg_alpha: 0.0
+  min_child_weight: 1.0
+  gamma: 0.0
+  early_stopping_rounds: 50
+  scan:
+    n_steps: 200
+    min_nS: 50
+    min_nB: 1000
+    min_B: 5.0
+    eps_plateau: 0.02

@@ -1,0 +1,67 @@
+# Local settings and environments (track only the example).
+.env
+.env.*
+!.env.example
+.envrc
+/LOCAL_SETTINGS.md
+/notebooks/settings.local.json
+.venv/
+venv/
+env/
+.claude/
+.vscode/
+.idea/
+
+# Generated artifacts and local data. No exceptions for old ROOT test files.
+/outputs/
+/data/
+/rawdata/
+/compact/
+studies/**/data/
+studies/**/rawdata/
+studies/**/compact/
+studies/**/outputs/
+*.root
+*.parquet
+*.arrow
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.ubj
+*.joblib
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+
+# Python and test/tool caches.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage*
+htmlcov/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# Build products and upload bundles.
+/build/
+/dist/
+compactor/build/
+compactor/dist/
+*.egg-info/
+*.whl
+*.zip
+*.tar.gz
+
+# Logs and OS temporary files.
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

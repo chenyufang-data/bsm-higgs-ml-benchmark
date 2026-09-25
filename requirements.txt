@@ -1,0 +1,6 @@
+# Dependencies are defined once, in pyproject.toml.
+# This file exists for tooling that expects a requirements.txt:
+#     pip install -r requirements.txt
+# is equivalent to
+#     pip install -e .[dev]
+-e .[dev]

@@ -1,0 +1,11 @@
+check,passed
+"grid and both network pilots complete, unchanged and on the same grid",True
+m200: the reloaded BDT reproduces its saved validation scores (max 0.0e+00),True
+m200: BDT features rebuilt from the raw role-jet inputs reproduce its scores (max 0.0e+00),True
+m200: the reloaded lorentznet reproduces its saved scores (max 0.0e+00),True
+m200: the reloaded particle_transformer reproduces its saved scores (max 0.0e+00),True
+m400: the reloaded BDT reproduces its saved validation scores (max 0.0e+00),True
+m400: BDT features rebuilt from the raw role-jet inputs reproduce its scores (max 0.0e+00),True
+m400: the reloaded lorentznet reproduces its saved scores (max 0.0e+00),True
+m400: the reloaded particle_transformer reproduces its saved scores (max 0.0e+00),True
+no test rows read,True

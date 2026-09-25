@@ -1,0 +1,11 @@
+# Exact library versions of the server environment that produced every cg_bbc
+# export so far (recorded in each .export.json). Keep one dataset on one set:
+# run_extraction.sh checks these before a batch. Update deliberately, then use a
+# new export directory. PyYAML is not recorded by exports; pin it here too once
+# `pip freeze` on the server has been captured.
+# python: 3.11
+awkward==2.8.11
+numpy==2.3.5
+pandas==2.3.3
+pyarrow==22.0.0
+uproot==5.6.9

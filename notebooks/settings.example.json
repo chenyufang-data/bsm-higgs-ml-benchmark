@@ -1,0 +1,12 @@
+{
+  "study": "../studies/cg_bbc",
+  "signal_dir": "/path/to/compact/rho01",
+  "background_dir": "/path/to/compact/backgrounds",
+  "workspace": "../outputs/cg_bbc",
+  "mass": 200,
+  "benchmark_id": "m200-rho01-v1",
+  "run_id": "xgb-m200-rho01-v1",
+  "preview_rows_per_sample": 5000,
+  "weight_mode": "none",
+  "training_args": []
+}

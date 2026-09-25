@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hepml-compactor"
+dynamic = ["version"]
+description = "Standalone CPU ROOT to object-level Parquet extraction"
+readme = "README.md"
+requires-python = ">=3.10"
+# Ranges only; constraints-py311.txt pins the exact server environment.
+dependencies = ["numpy", "pandas", "pyyaml", "uproot>=5", "awkward>=2", "pyarrow"]
+
+[project.scripts]
+hepml-compact = "hepml_compact.cli:main"
+hepml-fill-xs = "hepml_compact.cross_sections:main"
+hepml-merging-counts = "hepml_compact.merging_counts:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "hepml_compact.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hepml_compact*"]
